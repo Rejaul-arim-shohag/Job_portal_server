@@ -24,11 +24,11 @@ app.use(hpp());
 app.use(express.static('public'));
 
 
-app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    windowMs: 15 * 60 * 10000, // 15 minutes
+	max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
@@ -41,9 +41,11 @@ const options = {
     pass:"cKCvJBxPceRvqkmp",
     autoIndex:true,
 };
+
+
 mongoose.connect(uri,options, (err)=>{
     if(err){
-        console.log("Database connetion fail")
+        console.log(err)
     }
     else{
         console.log("Database connect successfully")

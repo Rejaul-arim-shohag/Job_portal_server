@@ -12,7 +12,7 @@ exports.jobTypeCreate =(req, res)=>{
 
 exports.jobTypeRead =(req, res)=>{
     JobTypeModel.aggregate([
-        { $sort: { _id: 1 } }
+        { $sort: { _id: 1 } },
     ], (err, data)=>{
         if(err){
             res.status(200).json({"status":"fail", "data":err})

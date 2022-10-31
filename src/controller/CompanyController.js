@@ -1,6 +1,9 @@
 const CompanyModel = require ("../model/CompanyModel");
 var jwt = require('jsonwebtoken');
 
+const mongoose = require("mongoose");
+const objectId = mongoose.Types.ObjectId;
+
 exports.registrationCompany =(req, res)=>{
     CompanyModel.create(req.body, (err,data)=>{
         if(err){
@@ -60,3 +63,31 @@ exports.CompanyProfileUpdate =(req, res)=>{
     })
 }
 
+exports.readCompanyProfile = async (req, res) => {
+    const id = req.params.id
+    CompanyModel.aggregate([
+        { $match: { _id: objectId(id) } },
+        {
+            $project: {
+                company_name: 1,
+                company_address: 1,
+                company_contact: 1,
+                company_email: 1,
+                company_website: 1,
+                professional_summary: 1,
+                profile_image: 1,
+                founded_date: 1,
+                company_size: 1,
+                categories: 1,
+                linkedin: 1,
+            }
+        }
+    ], (err, data) => {
+        if (err) {
+            res.status(400).json({ "status": "fail", "data": err })
+        } else {
+            res.status(200).json({ "status": "success", "data": data })
+        }
+    })
+
+}

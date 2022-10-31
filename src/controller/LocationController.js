@@ -9,6 +9,15 @@ exports.CreationLocation =(req, res)=>{
     })
 }
 
+exports.readLocations =(req, res)=>{
+    LocationModel.find({}, (err,data)=>{
+        if(err){
+            res.status(200).json({"status":"fail", "data":err})
+        } else{
+            res.status(200).json({"status":"success", "data":data})
+        }
+    })
+}
 
 
 

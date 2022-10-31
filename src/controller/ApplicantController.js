@@ -1,25 +1,16 @@
 const ApplicantModel = require("../model/ApplicantModel");
 var jwt = require('jsonwebtoken');
-const { cloudinary } = require('../Utilites/Cloudinary');
+const Cloudinary = require("../Utilites/Cloudinary");
+
 const mongoose = require("mongoose");
 const objectId = mongoose.Types.ObjectId;
 
-exports.ApplicantRegistration =  async(req, res) => {
+exports.ApplicantRegistration = (req, res) => {
    
-    // try {
-    //     const fileString = req.body.fileString
-    //     const uploadResponse = await cloudinary.uploader.upload(fileString, {
-    //         upload_preset: 'dev_setups',
-    //     });
-    //     res.json({ msg: 'yaya' });
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status(500).json({ err: 'Something went wrong' });
-    // }
-
     ApplicantModel.create(req.body, (err, data) => {
         if (err) {
-            res.status(200).json({ "status": "fail", "data": err })
+            res.status(500).json({ "status": "fail", "data": err })
+            console.log(err)
         } else {
             res.status(200).json({ "status": "success", "data": data })
         }
@@ -29,6 +20,7 @@ exports.ApplicantRegistration =  async(req, res) => {
 
 exports.ApplicantLogin = (req, res) => {
     const reqBody = req.body;
+   
     ApplicantModel.aggregate([
         { $match: reqBody },
         {
@@ -59,28 +51,52 @@ exports.ApplicantLogin = (req, res) => {
                 let ApplicantToken = jwt.sign(Payload, 'SecretApplicantKey123456789');
                 res.status(200).json({ "status": "success", "ApplicantToken": ApplicantToken, "data": data[0] })
             } else {
-                res.status(201).json({ "status": "No Applicant Found" })
+                res.status(200).json({ "status": "No Applicant Found" })
             }
         }
     })
 }
 
-exports.ApplicantProfileUpdate =  async(req, res) => {
-    const id = req.params.applicant_id
-    ApplicantModel.updateOne({_id:id},req.body, (err, data) => {
+exports.ApplicantProfileUpdate = (req, res) => {
+    const id = req.params.applicant_id;
+    ApplicantModel.updateOne({ _id: id }, req.body, (err, data) => {
         if (err) {
-            res.status(200).json({ "status": "fail", "data": err })
+            res.status(400).json({ "status": "fail", "data": err })
         } else {
             res.status(200).json({ "status": "success", "data": data })
         }
     })
 
 }
+exports.ApplicantProfilePicUpdate = async(req, res) => {
+    const id = req.params.applicant_id;
+    const {profile_image} = req.body
+    try{
+        const result = await Cloudinary.uploader.upload(profile_image, {
+           
+        })
+        //  const uploadRes = ApplicantModel.updateOne({ _id: id },{profile_image:result.url} )
+        //  res.status(200).json({ "status": "success", "data": uploadRes })
 
-exports.readApplicantProfile =  async(req, res) => {
+        ApplicantModel.updateOne({ _id: id }, {profile_image:result.url}, (err, data) => {
+            if (err) {
+                res.status(400).json({ "status": "fail", "data": err })
+            } else {
+                res.status(200).json({ "status": "success", "data": data })
+            }
+        })
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({ "status": "fail", "data": err })
+    }
+}
+
+
+exports.readApplicantProfile = async (req, res) => {
     const id = req.params.applicant_id
     ApplicantModel.aggregate([
-        { $match: {_id:objectId(id)}},
+        { $match: { _id: objectId(id) } },
         {
             $project: {
                 applicant_name: 1,
@@ -104,8 +120,11 @@ exports.readApplicantProfile =  async(req, res) => {
         if (err) {
             res.status(400).json({ "status": "fail", "data": err })
         } else {
-            res.status(201).json({ "status": "success", "data":data })
+            res.status(200).json({ "status": "success", "data": data })
         }
     })
 
 }
+
+
+//applications

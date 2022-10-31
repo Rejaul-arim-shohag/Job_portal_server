@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema({
+    icon:{type: String, default:""},
     category_name: { type: String, require:true},
     admin_id:{ type: mongoose.Schema.ObjectId }, 
     createDate: { type: Date, default: Date.now()},
