@@ -75,9 +75,7 @@ exports.ApplicantProfilePicUpdate = async(req, res) => {
         const result = await Cloudinary.uploader.upload(profile_image, {
            
         })
-        //  const uploadRes = ApplicantModel.updateOne({ _id: id },{profile_image:result.url} )
-        //  res.status(200).json({ "status": "success", "data": uploadRes })
-
+       
         ApplicantModel.updateOne({ _id: id }, {profile_image:result.url}, (err, data) => {
             if (err) {
                 res.status(400).json({ "status": "fail", "data": err })
@@ -87,7 +85,6 @@ exports.ApplicantProfilePicUpdate = async(req, res) => {
         })
     }
     catch(err){
-        console.log(err)
         res.status(500).json({ "status": "fail", "data": err })
     }
 }

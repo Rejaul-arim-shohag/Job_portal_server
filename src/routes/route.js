@@ -61,16 +61,21 @@ router.post("/EmployerLogin", EmployerController.EmployerLogin);
 router.post("/CompanyProfileUpdate/:company_id",EmployerVerifyMiddleware, EmployerController.CompanyProfileUpdate);
 
 router.get("/readCompanyProfile/:id", EmployerController.readCompanyProfile);
+router.post("/EmployerProfilePicUpdate/:id",EmployerVerifyMiddleware, EmployerController.EmployerProfilePicUpdate);
+
 
 //job route
 router.post("/CreateJob",EmployerVerifyMiddleware, JobController.CreateJob);
 router.post("/readJobs/:pageNo/:parPage", JobController.readJobs);
 router.get("/readJobById/:job_id", JobController.readJobById);
+router.get("/readJobsByCompanyId/:company_id",EmployerVerifyMiddleware, JobController.readJobsByCompanyId);
+
 
 
 //application detail route 
 router.post("/CreateJobApply",ApplicantVerifyMiddleware, ApplicationDetailsController.CreateJobApply);
 router.get("/readApplicantJobs/:applicant_id",ApplicantVerifyMiddleware, ApplicationDetailsController.readApplicantJobs);
+router.get("/readEmployerJobDetails/:company_Id",EmployerVerifyMiddleware, ApplicationDetailsController.readEmployerJobDetails);
 
 
 
