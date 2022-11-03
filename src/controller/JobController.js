@@ -96,7 +96,7 @@ exports.readJobs = async (req, res) => {
 
                             }
                         },
-                        {$sort:{ createDate : -1 } }
+                        {$sort:{ _id : -1 } }
 
                     ]
                 }

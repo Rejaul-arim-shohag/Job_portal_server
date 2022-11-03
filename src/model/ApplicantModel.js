@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema({
-    applicant_name: { type: String},
+    applicant_name: { type: String, default:"" },
     job_title: { type: String, default:"" },
     gender: { type: String, default:"" },
     phone: { type: String, default:"" },
